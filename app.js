@@ -9,13 +9,13 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var usersRouter = require('./api/users/users');
 
-var corsOptions = {
-    origin: "http://localhost:3000"
-};
+// var corsOptions = {
+//     origin: "http://localhost:3000"
+// };
 
 var app = express();
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
