@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-       User.hasOne(models.AccessToken)
+
     }
   };
   User.init({
@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     profile_img_url: DataTypes.STRING,
     phone: DataTypes.STRING,
-    uid: DataTypes.STRING
+    uid: DataTypes.STRING,
+    coordinates_json: DataTypes.TEXT
   }, {
     sequelize,
         charset: 'utf8',

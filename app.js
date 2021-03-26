@@ -8,6 +8,8 @@ var logger = require('morgan');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 var usersRouter = require('./api/users/users');
+var carsRouter = require('./api/car_sharing/cars');
+var listingsRouter = require('./api/car_sharing/listings');
 
 // var corsOptions = {
 //     origin: "http://localhost:3000"
@@ -25,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/uploads/images/profile'));
 
 
-app.use('/api', usersRouter);
+app.use('/api', usersRouter,carsRouter,listingsRouter);
+
 
 module.exports = app;

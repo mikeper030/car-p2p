@@ -4,6 +4,7 @@ const consts = require('../../constants')
 const db = require('../../models');
 var bcrypt = require('bcryptjs');
 var multer  = require('multer');
+var auth = require('../auth/auth');
 /* GET users listing. */
 var storage = multer.diskStorage(
     {
@@ -16,7 +17,7 @@ var storage = multer.diskStorage(
 );
 var profilePath = multer({storage:storage})
 
-
+//list all users
 router.get(consts.USERS_GET_ENDPOINT, function(req, res, next) {
     if(!req.query.page||!req.query.size){
         res.status(400).send({status:"missing request params"})
@@ -35,10 +36,9 @@ router.get(consts.USERS_GET_ENDPOINT, function(req, res, next) {
         })
     }
 });
-
-router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),function (req,res,next) {
+//update a user
+router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),auth.authenticate_request,function (req,res,next) {
     const user_data = JSON.parse(req.body.user)
-
     if (!user_data.first_name||!user_data.last_name||!user_data.email||!user_data.password||!user_data.phone){
        res.status(400).send({response:"Missing user details"})
    }else {

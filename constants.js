@@ -7,5 +7,10 @@ module.exports = Object.freeze({
     //post a new user with all data
     USER_POST_BY_DETAILS_ENDPOINT:"/user",
     //Update a user by uid
-    USER_PUT_BY_UID:"/user"
+    USER_PUT_BY_UID:"/user",
+    //get all car models by make. must append ?make=..
+    CARS_GET_MODELS_BY_MAKE:"/cars/models",
+    //get all car makers
+    CARS_GET_MAKERS:"/cars/makers",
+    LISTINGS_CREATE_LIST:"cars/listings/create",
 });
