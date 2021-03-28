@@ -36,8 +36,8 @@ router.get(consts.USERS_GET_ENDPOINT, function(req, res, next) {
         })
     }
 });
-//update a user
-router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),auth.authenticate_request,function (req,res,next) {
+//create a new user
+router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),function (req,res,next) {
     const user_data = JSON.parse(req.body.user)
     if (!user_data.first_name||!user_data.last_name||!user_data.email||!user_data.password||!user_data.phone){
        res.status(400).send({response:"Missing user details"})
@@ -45,13 +45,13 @@ router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),au
      db.User.sync().then(()=>{
          db.User.findOne({where:{email:user_data.email}}).then((user)=>{
                if (user){
-                   res.status(400).send({response:"Email already in use by another account!"})
+                   res.status(200).send({code:400,response:"Email already in use by another account!"})
                }else {
                    if(req.file&&req.file.originalname&&req.file.originalname!==''){
                        user_data.profile_img_url = req.file.originalname
                    }
                    db.User.create(user_data).then((user)=>{
-                       res.status(200).send({response:"User created successfully!"})
+                       res.status(200).send({code:200,response:"User created successfully!"})
                    })
                }
          })
@@ -59,7 +59,7 @@ router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),au
      })
    }
 })
-
+//update a user
 router.put(consts.USER_PUT_BY_UID,profilePath.single("myFile"),function (req,res,next) {
     const user_data = JSON.parse(req.body.user)
     const uid = req.body.uid
@@ -97,11 +97,19 @@ router.get(consts.USER_GET_BY_EMAILPASS_ENDPOINT,async function (req,res,next) {
           });
        const user = row[0]
       if (user) {
-          if (bcrypt.compare(user.password, pass)) {
-              res.status(200).send({response: "User found!", apiKey: user.token,uid:user.uid})
-          } else {
-              res.status(403).send({response: "Email or password not correct!"})
-          }
+          bcrypt.compare(pass, user.password, (err, data) => {
+              //if error than throw error
+              if (err) throw err
+
+              //if both match than you can do anything
+              if (data) {
+                  res.status(200).send({code:200,response: "User found!",username:user.first_name, apiKey: user.token,uid:user.uid})
+              } else {
+                  res.status(200).send({response: "Email or password mismatch!",code:403})
+              }
+
+          })
+
       } else {
           res.status(404).send({response: "User does not exist!"})
       }

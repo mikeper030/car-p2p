@@ -12,7 +12,7 @@ var carsRouter = require('./api/car_sharing/cars');
 var listingsRouter = require('./api/car_sharing/listings');
 
 // var corsOptions = {
-//     origin: "http://localhost:3000"
+//     origin: "http://localhost:8080"
 // };
 
 var app = express();
