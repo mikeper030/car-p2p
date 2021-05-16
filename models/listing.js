@@ -24,9 +24,14 @@ module.exports = (sequelize, DataTypes) => {
         feedback_score: DataTypes.INTEGER,
         feedback_json: DataTypes.TEXT,
         car_coordinates: DataTypes.TEXT,
+        description:DataTypes.TEXT,
+        images_json:{
+            type:DataTypes.TEXT,
+            defaultValue:"{}"
+        },
         daily_price_low: DataTypes.INTEGER,
         daily_price_high: DataTypes.INTEGER,
-        availability_json: DataTypes.TEXT,
+
 
     }, {
         sequelize,

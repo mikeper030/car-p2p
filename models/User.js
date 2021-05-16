@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
     profile_img_url: DataTypes.STRING,
     phone: DataTypes.STRING,
     uid: DataTypes.STRING,
-    coordinates_json: DataTypes.TEXT
   }, {
     sequelize,
         charset: 'utf8',

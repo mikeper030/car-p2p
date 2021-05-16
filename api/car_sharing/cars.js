@@ -31,7 +31,10 @@ router.get(consts.CARS_GET_MAKERS,auth.authenticate_request, function(req, res, 
 
 router.get(consts.CARS_GET_MODELS_BY_MAKE,auth.authenticate_request, function(req, res, next) {
 
-    const make_id = req.query.make_id
+    const make_id = req.query.make_id;
+    if (!make_id){
+        return res.status(200).send({status: "missing model id param", code:404});
+    }
     db.model.findAndCountAll({
         raw: true, where: {make_id:make_id}
     }).then(function (cars) {

@@ -37,9 +37,9 @@ router.get(consts.USERS_GET_ENDPOINT, function(req, res, next) {
     }
 });
 //update a user
-router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),auth.authenticate_request,function (req,res,next) {
+router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,auth.authenticate_request,profilePath.single("file"),function (req,res,next) {
     const user_data = JSON.parse(req.body.user)
-    if (!user_data.first_name||!user_data.last_name||!user_data.email||!user_data.password||!user_data.phone){
+    if (!user_data||!user_data.first_name||!user_data.last_name||!user_data.email||!user_data.password||!user_data.phone){
        res.status(400).send({response:"Missing user details"})
    }else {
      db.User.sync().then(()=>{
@@ -59,10 +59,10 @@ router.post(consts.USER_POST_BY_DETAILS_ENDPOINT,profilePath.single("myFile"),au
      })
    }
 })
-
-router.put(consts.USER_PUT_BY_UID,profilePath.single("myFile"),function (req,res,next) {
+//update existing user
+router.put(consts.USER_PUT_BY_UID,profilePath.single("file"),auth.authenticate_request,function (req,res,next) {
     const user_data = JSON.parse(req.body.user)
-    const uid = req.body.uid
+    const uid = user_data.uid
     if(!uid){
         res.status(403).send({response:"Missing uid"})
     }else {

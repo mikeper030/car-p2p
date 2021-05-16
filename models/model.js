@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true
         },
         make_id: DataTypes.INTEGER,
+        images_json: DataTypes.TEXT,
         code: DataTypes.STRING,
         title: DataTypes.STRING
     }, {
