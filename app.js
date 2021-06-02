@@ -10,7 +10,7 @@ const cors = require("cors");
 var usersRouter = require('./api/users/users');
 var carsRouter = require('./api/car_sharing/cars');
 var listingsRouter = require('./api/car_sharing/listings');
-
+var accountRouter = require('./api/users/account')
 // var corsOptions = {
 //     origin: "http://localhost:8080"
 // };
@@ -30,7 +30,7 @@ app.use("/uploads/images/profile",express.static(__dirname+ '/uploads/images/pro
 app.use("/uploads/images/cars",express.static(__dirname+ '/uploads/images/cars'));
 
 
-app.use('/api', usersRouter,carsRouter,listingsRouter);
+app.use('/api', usersRouter,carsRouter,listingsRouter,accountRouter);
 
 
 module.exports = app;

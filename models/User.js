@@ -1,7 +1,7 @@
 'use strict';
 var bcrypt = require('bcryptjs');
-const uuidAPIKey = require('uuid-apikey');
 
+const uuidAPIKey = require('uuid-apikey');
 const {
   Model
 } = require('sequelize');
@@ -37,13 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         user.password = await bcrypt.hash(user.password, salt);
         let cred = uuidAPIKey.create()
         user.uid = cred.uuid
-        db.AccessToken.sync().then(()=>{
-          db.AccessToken.create({
-            uid: cred.uuid,
-            expires:24,
-            token:cred.apiKey
-          })
-        })
+
       },
 
     }

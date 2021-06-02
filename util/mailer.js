@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-const templates  = require('templates');
+const templates  = require('./templates');
 const consts = require('../constants')
 const db = require('../models');
 module.exports={

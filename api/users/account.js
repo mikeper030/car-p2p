@@ -5,10 +5,14 @@ const db = require('../../models');
 var bcrypt = require('bcryptjs');
 var multer  = require('multer');
 var auth = require('../auth/auth');
-router.post(consts.ACCOUNT_RESET_PASS,function (req,res,next) {
+const mailer = require('../../util/mailer')
+const util = require('../../util/util')
+
+
+router.post(consts.ACCOUNT_RESET_PASS,auth.authenticate_request,function (req,res,next) {
     let userRequest = req.body;
     if(!userRequest.email){
-        res.status(200).send({status: 'Missing request params!'});
+        res.status(200).send({code:404,status: 'Missing request params!'});
         return;
     }
     try {
@@ -32,7 +36,7 @@ router.post(consts.ACCOUNT_RESET_PASS,function (req,res,next) {
                         });
                     });
                 }
-                res.status(200).send({redirect_url:"/"+user.priviledge+"/login",status: "נשלח מייל לאיפוס!"});
+                res.status(200).send({code:200,status: "ok"});
 
             });
         });
