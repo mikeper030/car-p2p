@@ -5,7 +5,7 @@ const db = require('../models');
 module.exports={
     sendPasswordResetEmail: function(email,hash){
         return new Promise(function (resolve,reject) {
-            var link = consts.API_BASE_URL+'/account?action=password-reset&token='+hash
+            var link = consts.WEBSITE_URL+'/account?action=password-reset&token='+hash
             const template = templates.getPasswordResetEmail(email,link);
             var smtpTransport = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
@@ -61,9 +61,9 @@ module.exports={
             });
         })
     },
-    sendAccountActivationEmail : function (email, username, link, userType) {
+    sendAccountActivationEmail : function (email, username, link) {
         return new Promise(function (resolve,reject) {
-            const template = templates.getAccountActivationTemplate(username,link,userType+".");
+            const template = templates.getAccountActivationTemplate(username,link);
             var smtpTransport = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
@@ -75,7 +75,7 @@ module.exports={
             var mailOptions = {
                 from: 'p2pcarsharing21@gmail.com',
                 to: email,
-                subject: "password reset",
+                subject: "Account activation",
                 html:template,
                 text: "press the link for password reset"
             };

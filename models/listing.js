@@ -21,9 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         model_id: DataTypes.INTEGER,
         user_uid: DataTypes.TEXT,
-        feedback_score: DataTypes.INTEGER,
-        feedback_json: DataTypes.TEXT,
-        car_coordinates: DataTypes.TEXT,
+        lat: DataTypes.TEXT,
+        lng: DataTypes.TEXT,
         description:DataTypes.TEXT,
         images_json:{
             type:DataTypes.TEXT,

@@ -4,7 +4,7 @@ const consts = require('../../constants')
 const db = require('../../models');
 var bcrypt = require('bcryptjs');
 var multer  = require('multer');
-var auth = require('../auth/auth');
+var auth = require('../auth/AuthMiddleware');
 /* GET users listing. */
 var storage = multer.diskStorage(
     {

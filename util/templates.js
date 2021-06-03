@@ -1,5 +1,5 @@
 module.exports ={
-    getAccountActivationTemplate(username, link,accountType) {
+    getAccountActivationTemplate(username, link) {
         const html='<!DOCTYPE html>' +
             '<html lang="he" data-textdirection="rtl">' +
             '<head>' +
@@ -121,7 +121,7 @@ module.exports ={
             '                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">' +
             '                    <tr>' +
             '                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: \'Lato\', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">' +
-            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="/uploads/images/logo.png" width="125" height="120" style="display: block; border: 0px;" />' +
+            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="https://firebasestorage.googleapis.com/v0/b/abpm-c7186.appspot.com/o/logo.png?alt=media&token=c9cf27ed-d9b6-4945-a33f-7c4507131534" width="125" height="120" style="display: block; border: 0px;" />' +
             '                        </td>' +
             '                    </tr>' +
             '                </table>' +
@@ -135,9 +135,7 @@ module.exports ={
 
             "<p style=\"margin: 0; text-align: left;\">Welcome to GetACar!</p><br>" +
 
-            "<p> Thank your for being one of our driving community"
-            "</p>" +
-
+            "<p> Thank your for being one of our driving community </p>"+
             '                        </td>' +
             '                    </br>' +
             '                    <tr>' +
@@ -323,7 +321,7 @@ module.exports ={
             '                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">' +
             '                    <tr>' +
             '                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: \'Lato\', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">' +
-            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="/uploads/images/logo.png" width="125" height="120" style="display: block; border: 0px;" />' +
+            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="https://firebasestorage.googleapis.com/v0/b/abpm-c7186.appspot.com/o/logo.png?alt=media&token=c9cf27ed-d9b6-4945-a33f-7c4507131534" width="125" height="120" style="display: block; border: 0px;" />' +
             '                        </td>' +
             '                    </tr>' +
             '                </table>' +
@@ -355,7 +353,7 @@ module.exports ={
             '                    </tr> <!-- COPY -->' +
             '                    <tr>' +
             '                        <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 0px 30px; color: #666666; font-family: \'Lato\', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">' +
-            '                            <p style="margin: 0;  text-align: right;">if</p>' +
+            '                            <p style="margin: 0;  text-align: right;"></p>' +
             '                        </td>' +
             '                    </tr> <!-- COPY -->' +
             '                    <tr>' +
@@ -522,7 +520,7 @@ module.exports ={
             '                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">' +
             '                    <tr>' +
             '                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: \'Lato\', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">' +
-            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="/uploads/images/logo.png" width="125" height="120" style="display: block; border: 0px;" />' +
+            '                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;"></h1> <img src="https://firebasestorage.googleapis.com/v0/b/abpm-c7186.appspot.com/o/logo.png?alt=media&token=c9cf27ed-d9b6-4945-a33f-7c4507131534" width="125" height="120" style="display: block; border: 0px;" />' +
             '                        </td>' +
             '                    </tr>' +
             '                </table>' +
@@ -533,7 +531,7 @@ module.exports ={
             '                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">' +
             '                    <tr>' +
             '                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: \'Lato\', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">' +
-            '                            <p style="margin: 0;  text-align: right;">סיסמא הוחלפה בהצלחה ' +email+
+            '                            <p style="margin: 0;  text-align: right;">Hi ' +email+ ", Your password was changed successfully!"+
             '</p>' +
             '                        </td>' +
             '                    </tr>' +

@@ -1,7 +1,12 @@
 
+
+
 module.exports = Object.freeze({
     //All requests must have /api/... prefix
-    API_BASE_URL:"http://185.241.5.135",
+    API_BASE_URL:"http://185.241.5.135:3000",
+    //All requests must have /api/... prefix
+    WEBSITE_URL:"http://localhost:8080",
+
     //get all users
     USERS_GET_ENDPOINT:"/users",
     //get a user by email and pass. parameters delivered in request headers
@@ -24,5 +29,13 @@ module.exports = Object.freeze({
     //get all car listings
     LISTINGS_GET:"/cars/listings",
     //reset password endpoint"
-    ACCOUNT_RESET_PASS:"/account/reset-password"
+    ACCOUNT_RESET_PASS:"/account",
+    //refresh token for logged in user
+    USER_REFRESH_TOKEN:"/user/refresh-token",
+    //submit new password
+    ACCOUNT_SUBMIT_NEW_PASS:"/account/submit-password",
+    //activate new created account
+    ACCOUNT_EMAIL_ACTIVATE:"/account/activate-email",
+    //send activation email
+    ACCOUNT_SEND_EMAIL_ACTIVATE:"/account/send-email"
 });
