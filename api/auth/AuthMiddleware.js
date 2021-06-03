@@ -2,9 +2,6 @@ const db = require('../../models');
 module.exports={
 
     authenticate_request:function(req,res,next){
-
-
-
             const auth_token = req.header('token');
             const uid = req.header('uid');
 
@@ -28,6 +25,9 @@ module.exports={
             }
 
     },
+    refreshToken: function (req,res,next){
+        
+    }
 
 
 }
