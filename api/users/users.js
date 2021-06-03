@@ -150,8 +150,14 @@ router.get(consts.USER_GET_BY_UID,async function (req,res,next) {
                 type: db.sequelize.QueryTypes.SELECT
             });
         const user = row[0]
-        let img = "http://localhost:3000/uploads/images/profile/"+user.profile_img_url
-         user.profile_img_url = img
+        if (user.profile_img_url){
+           let img = "http://localhost:3000/uploads/images/profile/"+user.profile_img_url
+            user.profile_img_url = img
+       }
+
+
+
+
         delete user.password
         delete user.token
         delete user.uid
