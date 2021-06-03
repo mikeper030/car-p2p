@@ -18,23 +18,23 @@ var storage = multer.diskStorage(
 var carsPath = multer({storage:storage})
 
 router.post(consts.LISTINGS_CREATE_LIST,auth.authenticate_request, function(req, res, next) {
-    let data =JSON.parse(req.body.data)
-    if (!data.model_id || !data.user_uid ||!data.car_coordinates  || !data.daily_price_low) {
-        res.status(200).send({code: 304, status: "missing request params"})
-    }else {
-        db.listing.create({
-            model_id: data.model_id,
-            user_uid: data.user_uid,
-            feedback_score: "5",
-            feedback_json: "",
-            car_coordinates: JSON.stringify(data.car_coordinates),
-            description:data.description||"",
-            daily_price_low: data.daily_price_low,
-            daily_price_high: data.daily_price_low||0,
-        }).then(r=>{
+    // let data =JSON.parse(req.body.data)
+    // if (!data.model_id || !data.user_uid ||!data.car_coordinates  || !data.daily_price_low) {
+    //     res.status(200).send({code: 304, status: "missing request params"})
+    // }else {
+    //     db.listing.create({
+    //         model_id: data.model_id,
+    //         user_uid: data.user_uid,
+    //         feedback_score: "5",
+    //         feedback_json: "",
+    //         car_coordinates: JSON.stringify(data.car_coordinates),
+    //         description:data.description||"",
+    //         daily_price_low: data.daily_price_low,
+    //         daily_price_high: data.daily_price_low||0,
+    //     }).then(r=>{
             res.status(200).send({code: 200,id:r.id, status: "Your listing was created successfully!"})
-        })
-    }
+     //   })
+    //}
 
 });
 

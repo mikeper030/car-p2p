@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
         user_uid: DataTypes.TEXT,
         lat: DataTypes.TEXT,
         lng: DataTypes.TEXT,
+        features_json: DataTypes.TEXT,
+        mobile_phone: DataTypes.TEXT,
+        notification_advance: DataTypes.INTEGER,
+        min_trip_days: DataTypes.INTEGER,
+        max_trip_days: DataTypes.INTEGER,
         description:DataTypes.TEXT,
         images_json:{
             type:DataTypes.TEXT,
