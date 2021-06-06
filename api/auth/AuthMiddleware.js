@@ -16,6 +16,7 @@ module.exports={
                         }
                     }).then(row => {
                         if (row) {
+                            req.uid = row.uid
                             let date = new Date()
                             let exp =  new Date(row.expires);
                             if(date > exp){

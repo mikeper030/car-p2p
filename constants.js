@@ -28,6 +28,8 @@ module.exports = Object.freeze({
     LISTINGS_IMAGE_UPLOAD_MULTIPLE:"/cars/listings/images/upload-multiple",
     //get all car listings
     LISTINGS_GET:"/cars/listings",
+    //get a specific listing
+    LISTING_GET:"/cars/listing",
     //reset password endpoint"
     ACCOUNT_RESET_PASS:"/account",
     //refresh token for logged in user

@@ -24,7 +24,7 @@ router.get(consts.CARS_GET_MAKERS,auth.authenticate_request, function(req, res, 
         var data = {}
         data.count = cars.count;
         data.items = cars.rows;
-        res.status(200).send({status: "success", data: data});
+        res.status(200).send({code:200,status: "success", data: data});
     })
 
 });
@@ -41,7 +41,7 @@ router.get(consts.CARS_GET_MODELS_BY_MAKE,auth.authenticate_request, function(re
         var data = {}
         data.count = cars.count;
         data.items = cars.rows;
-        res.status(200).send({status: "success", data: data});
+        res.status(200).send({code:200,status: "success", data: data});
     })
 
 });
