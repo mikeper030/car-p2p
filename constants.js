@@ -3,6 +3,7 @@
 
 module.exports = Object.freeze({
     //All requests must have /api/... prefix
+    AUTH_ON: true,
     API_BASE_URL:"http://185.241.5.135:3000",
     //All requests must have /api/... prefix
     WEBSITE_URL:"http://localhost:8080",

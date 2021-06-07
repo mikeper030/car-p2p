@@ -1,7 +1,12 @@
 const db = require('../../models');
+const constants = require('../../constants')
 module.exports={
 
     authenticate_request:function(req,res,next){
+            if(!constants.AUTH_ON){
+                next()
+                return
+            }
             let auth_token = req.header('Authorization');
             if (!auth_token) auth_token = req.query.token
 

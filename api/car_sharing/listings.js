@@ -53,7 +53,7 @@ router.get(consts.LISTINGS_GET,auth.authenticate_request, function(req, res, nex
             "SELECT " +
             " (SELECT COUNT(*) FROM listings INNER JOIN models ON listings.model_id = models.id ) as count, " +
             "CASE WHEN" +
-            " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json ELSE models.images_json END as images_json, " +
+            " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json ELSE models.images_json END as images_json, listings.id as listing_id, " +
             "model_id, user_uid, lat, lng ,features_json,mobile_phone,description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
             " FROM" +
             " listings INNER JOIN models ON listings.model_id = models.id "+
