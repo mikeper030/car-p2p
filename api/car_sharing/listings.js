@@ -19,45 +19,38 @@ var storage = multer.diskStorage(
 var carsPath = multer({storage:storage})
 
 //get a specific listing by id
-router.get(consts.LISTING_GET,auth.authenticate_request, function(req, res, next) {
+router.get(consts.LISTING_GET, function(req, res, next) {
     //todo pass the desired date ranges and search logic
     if (!req.query.id) {
         res.status(304).send({code: 304, status: "missing request params"})
     } else {
+        const id = req.query.id
         let data = {}
-        db.listing.sync().then(() => {
-            db.listing.findOne({where: {id: req.query.id}}).then(listing => {
-                if(listing) {
-                    data.items = listing;
-                    res.status(200).send({code: 200, data: data});
-                }else{
-                    res.status(200).send({code: 404, data: data});
-                }
-            });
-        });
-    }
-
-
-});
-router.get(consts.LISTINGS_GET,auth.authenticate_request, function(req, res, next) {
-    //todo pass the desired date ranges and search logic
-    if (!req.query.page || !req.query.size) {
-        res.status(304).send({code: 304, status: "missing request params"})
-    } else {
-        const page = Number(req.query.page);
-        const size = Number(req.query.size);
-        const title = String(req.query.title);
-        const offset =page*size;
-        const data = {};
         db.sequelize.query(
             "SELECT " +
-            " (SELECT COUNT(*) FROM listings INNER JOIN models ON listings.model_id = models.id ) as count, " +
+
             "CASE WHEN" +
-            " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json ELSE models.images_json END as images_json, listings.id as listing_id, " +
-            "model_id, user_uid, lat, lng ,features_json,mobile_phone,description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
+            " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json" +
+            " ELSE models.images_json END as images_json, " +
+            "listings.id as listing_id, " +
+            "model_id, user_uid, lat, lng ," +
+            // " (" +
+            // "        6371 " +
+            // "        * acos(" +
+            // "            cos( radians("+lat+") ) " +
+            // "            * cos( radians( listings.lat ) ) " +
+            // "            * cos( radians( listings.lng ) - radians("+lng+") )" +
+            // "            + sin( radians("+lat+") ) " +
+            // "            * sin( radians( listings.lat ) ) " +
+            // "        ) " +
+            // "   ) AS distance,  " +
+            "models.title as model_name, makes.title as maker_name, features_json," +
+            "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
             " FROM" +
-            " listings INNER JOIN models ON listings.model_id = models.id "+
-            " LIMIT "+offset+","+size, {
+            " listings INNER JOIN models ON listings.model_id = models.id INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+            "  WHERE listings.id="+id+""
+
+             , {
                 type: db.sequelize.QueryTypes.SELECT
             }).then(listings=>{
             console.log(listings)
@@ -67,12 +60,85 @@ router.get(consts.LISTINGS_GET,auth.authenticate_request, function(req, res, nex
                 data.count = 0;
             for(let a=0;a<listings.length;a++){
                 delete listings[a]['count'];
+                // listings[a]["distance"]+=" Km"
             }
             data.items = listings;
             res.status(200).send({status: 200, data: data});
         }).catch(function (err) {
             console.log(err)
         });
+    }
+
+
+});
+router.get(consts.LISTINGS_GET, function(req, res, next) {
+    //todo pass the desired date ranges and search logic
+    const where = req.query.where
+    const page = Number(req.query.page);
+    const size = Number(req.query.size);
+    if ( !req.query.size || !where || !req.query.page) {
+      return   res.status(200).send({code: 403, status: "missing request params"})
+    } else {
+        //get the lat lng of user's specified location
+        const offset =page*size;
+        const data = {};
+
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+where+'&key=AIzaSyDDqsqjB6WrkHlUZgXBPCsHXXpZrBWfL1E')
+            .then(res => res.json())
+            .then(json => {
+                const geometry = json.results[0].geometry
+                const lat = geometry.location.lat
+                const lng = geometry.location.lng
+                db.sequelize.query(
+                    "SELECT " +
+                    " (SELECT COUNT(*) FROM listings WHERE  (" +
+                    "        6371 " +
+                    "        * acos(" +
+                    "            cos( radians("+lat+") ) " +
+                    "            * cos( radians( listings.lat ) ) " +
+                    "            * cos( radians( listings.lng ) - radians("+lng+") )" +
+                    "            + sin( radians("+lat+") ) " +
+                    "            * sin( radians( listings.lat ) ) " +
+                    "        ) " +
+                    "   ) <25  ) as count, " +
+                      "CASE WHEN" +
+                    " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json" +
+                    " ELSE models.images_json END as images_json, " +
+                    "listings.id as listing_id, " +
+                    "model_id, user_uid, lat, lng , (" +
+                    "        6371 " +
+                    "        * acos(" +
+                    "            cos( radians("+lat+") ) " +
+                    "            * cos( radians( listings.lat ) ) " +
+                    "            * cos( radians( listings.lng ) - radians("+lng+") )" +
+                    "            + sin( radians("+lat+") ) " +
+                    "            * sin( radians( listings.lat ) ) " +
+                    "        ) " +
+                    "   ) AS distance,  models.title as model_name, makes.title as maker_name, features_json," +
+                    "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
+                    " FROM" +
+                    " listings INNER JOIN models ON listings.model_id = models.id INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+                    " HAVING distance < 25  " +
+                    "ORDER BY distance "+
+                    " LIMIT "+offset+","+size, {
+                        type: db.sequelize.QueryTypes.SELECT
+                    }).then(listings=>{
+                    console.log(listings)
+                    if(listings[0]) {
+                        data.count = listings[0].count;
+                    }else
+                        data.count = 0;
+                    for(let a=0;a<listings.length;a++){
+                        delete listings[a]['count'];
+                        listings[a]["distance"]+=" Km"
+                    }
+                    data.items = listings;
+                    res.status(200).send({status: 200, data: data});
+                }).catch(function (err) {
+                    console.log(err)
+                });
+            });
+
 
     }
 
