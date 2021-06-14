@@ -20,8 +20,9 @@ var carsPath = multer({storage:storage})
 
 //get a specific listing by id
 router.get(consts.LISTING_GET, function(req, res, next) {
-    //todo pass the desired date ranges and search logic
-    if (!req.query.id) {
+    const from = req.query.from
+    const to = req.query.to
+    if (!req.query.id||!from||!to) {
         res.status(304).send({code: 304, status: "missing request params"})
     } else {
         const id = req.query.id
@@ -73,6 +74,15 @@ router.get(consts.LISTING_GET, function(req, res, next) {
                 if (listings[a]["profile_img_url"]){
                     listings[a]["profile_img_url"]="http://185.241.5.135:3000/uploads/images/profile/"+listings[a]["profile_img_url"]
                 }
+                var date1 = new Date(from);
+                var date2 = new Date(to);
+                var time_diff = date2.getTime() - date1.getTime();
+                var hour_diff = time_diff / (1000 * 3600)
+                var days_diff = time_diff / (1000 * 3600 * 24);
+                listings[a]["trip_days"]=days_diff.toFixed(0)
+                let pricePerHour = Number(listings[a].price/24)
+                let totalPrice = pricePerHour * hour_diff
+                listings[a]["total_price"]=totalPrice.toFixed(2)
             }
             data.items = listings;
             res.status(200).send({status: 200, data: data});
@@ -86,9 +96,11 @@ router.get(consts.LISTING_GET, function(req, res, next) {
 router.get(consts.LISTINGS_GET, function(req, res, next) {
     //todo pass the desired date ranges and search logic
     const where = req.query.where
+    const from = req.query.from
+    const to = req.query.to
     const page = Number(req.query.page);
     const size = Number(req.query.size);
-    if ( !req.query.size || !where || !req.query.page) {
+    if ( !req.query.size || !where || !req.query.page || !from || !to) {
       return   res.status(200).send({code: 403, status: "missing request params"})
     } else {
         //get the lat lng of user's specified location
@@ -112,12 +124,14 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "            + sin( radians("+lat+") ) " +
                     "            * sin( radians( listings.lat ) ) " +
                     "        ) " +
-                    "   ) <25  ) as count, " +
+                    "   ) < 25  AND listings.id NOT IN " +
+                    "   (SELECT listing_id FROM Bookings WHERE ( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from)) ) as count, " +
                       "CASE WHEN" +
                     " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json" +
                     " ELSE models.images_json END as images_json, " +
                     "listings.id as listing_id, " +
-                    "model_id, user_uid, lat, lng , (" +
+                    "model_id, user_uid, lat, lng , " +
+                    "(" +
                     "        6371 " +
                     "        * acos(" +
                     "            cos( radians("+lat+") ) " +
@@ -126,10 +140,19 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "            + sin( radians("+lat+") ) " +
                     "            * sin( radians( listings.lat ) ) " +
                     "        ) " +
-                    "   ) AS distance,  models.title as model_name, makes.title as maker_name, features_json," +
-                    "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
+                    "   ) AS distance" +
+                    ",  " +
+                    "models.title as model_name, makes.title as maker_name, features_json," +
+                    "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, " +
+                    "max_trip_days, daily_price_low as price, listings.updatedAt " +
                     " FROM" +
-                    " listings INNER JOIN models ON listings.model_id = models.id INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+                    " listings " +
+
+                    "INNER JOIN models ON listings.model_id = models.id " +
+                    "INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+                    "" +
+                     " WHERE listings.id NOT IN (SELECT listing_id FROM Bookings " +
+                    "  WHERE ( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from))" +
                     " HAVING distance < 25  " +
                     "ORDER BY distance "+
                     " LIMIT "+offset+","+size, {
@@ -153,7 +176,15 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                         }else {
                             listings[a]["distance"]="0 Km"
                         }
-
+                        var date1 = new Date(from);
+                        var date2 = new Date(to);
+                        var time_diff = date2.getTime() - date1.getTime();
+                        var hour_diff = time_diff / (1000 * 3600)
+                        var days_diff = time_diff / (1000 * 3600 * 24);
+                        listings[a]["trip_days"]=days_diff.toFixed(0)
+                        let pricePerHour = Number(listings[a].price/24)
+                        let totalPrice = pricePerHour * hour_diff
+                        listings[a]["total_price"]=totalPrice.toFixed(2)
 
                     }
                     data.items = listings;
