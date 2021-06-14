@@ -162,7 +162,7 @@ router.get(consts.USER_GET_BY_UID ,auth.authenticate_request, async function (re
     const user = row[0]
     if (user) {
     if (user.profile_img_url) {
-        let img = "http://localhost:3000/uploads/images/profile/" + user.profile_img_url
+        let img = "http://185.241.5.135:3000/uploads/images/profile/" + user.profile_img_url
         user.profile_img_url = img
     }
 

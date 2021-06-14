@@ -11,6 +11,7 @@ var usersRouter = require('./api/users/users');
 var carsRouter = require('./api/car_sharing/cars');
 var listingsRouter = require('./api/car_sharing/listings');
 var accountRouter = require('./api/users/account')
+var bookingsRouter = require('./api/car_sharing/bookings')
 // var corsOptions = {
 //     origin: "http://localhost:8080"
 // };
@@ -30,7 +31,7 @@ app.use("/uploads/images/profile",express.static(__dirname+ '/uploads/images/pro
 app.use("/uploads/images/cars",express.static(__dirname+ '/uploads/images/cars'));
 
 
-app.use('/api', usersRouter,carsRouter,listingsRouter,accountRouter);
+app.use('/api', usersRouter,carsRouter,listingsRouter,accountRouter,bookingsRouter);
 
 
 module.exports = app;

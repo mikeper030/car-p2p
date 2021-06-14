@@ -45,9 +45,11 @@ router.get(consts.LISTING_GET, function(req, res, next) {
             // "        ) " +
             // "   ) AS distance,  " +
             "models.title as model_name, makes.title as maker_name, features_json," +
-            "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
+            "mobile_phone, 2 as feedback_score, profile_img_url, description,first_name, last_name, notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
             " FROM" +
-            " listings INNER JOIN models ON listings.model_id = models.id INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+            " listings INNER JOIN models ON listings.model_id = models.id " +
+            "          INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
+            "          INNER JOIN Users ON Users.uid = listings.user_uid " +
             "  WHERE listings.id="+id+""
 
              , {
@@ -58,9 +60,19 @@ router.get(consts.LISTING_GET, function(req, res, next) {
                 data.count = listings[0].count;
             }else
                 data.count = 0;
+
             for(let a=0;a<listings.length;a++){
                 delete listings[a]['count'];
-                // listings[a]["distance"]+=" Km"
+                listings[a]["user"]=""
+                if(listings[a]["first_name"]){
+                    listings[a]["user"]+=listings[a]["first_name"]+=" "
+                }
+                if(listings[a]["last_name"]){
+                    listings[a]["user"]+=listings[a]["last_name"]
+                }
+                if (listings[a]["profile_img_url"]){
+                    listings[a]["profile_img_url"]="http://185.241.5.135:3000/uploads/images/profile/"+listings[a]["profile_img_url"]
+                }
             }
             data.items = listings;
             res.status(200).send({status: 200, data: data});
@@ -130,7 +142,19 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                         data.count = 0;
                     for(let a=0;a<listings.length;a++){
                         delete listings[a]['count'];
-                        listings[a]["distance"]+=" Km"
+
+                        if (listings[a]["images_json"]&&listings[a]["images_json"]!==""){
+                            console.log(listings[a]["images_json"])
+                            listings[a]["thumbnail"]="http://185.241.5.135:3000/uploads/images/cars/"+JSON.parse(listings[a]["images_json"]).img1
+                        }
+                        if (listings[a]["distance"]!==0){
+                            listings[a]["distance"]=listings[a].distance.toFixed(1)
+                            listings[a]["distance"]+=" Km"
+                        }else {
+                            listings[a]["distance"]="0 Km"
+                        }
+
+
                     }
                     data.items = listings;
                     res.status(200).send({status: 200, data: data});
@@ -193,7 +217,7 @@ router.post(consts.LISTINGS_IMAGE_UPLOAD_SINGLE,[auth.authenticate_request,carsP
                     if(querypart) {
                         let json = {"img1":req.file.originalname}
                         querypart.update({images_json: JSON.stringify(json)}).then(r => {
-                            res.status(200).send({code:200,status: 'listing updated successfully!'});
+                            res.status(200).send({code:200,status: 'Image uploaded successfully!'});
                         });
                     }
                 });
@@ -216,12 +240,13 @@ router.post(consts.LISTINGS_IMAGE_UPLOAD_MULTIPLE,[auth.authenticate_request,car
             db.listing.findOne({where: {id: image.id}}).then(querypart => {
                 if(querypart) {
                     let json = {};
+                    console.log(req.files)
                     for (let i=0;i<req.files.length;i++){
                         json["img"+(i+1)]=req.files[i].originalname
                     }
 
                     querypart.update({images_json: JSON.stringify(json)}).then(r => {
-                        res.status(200).send({code:200,status: 'listing updated successfully!'});
+                        res.status(200).send({code:200,status: 'Images uploaded successfully!'});
                     });
                 }
             });

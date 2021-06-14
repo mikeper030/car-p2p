@@ -23,6 +23,10 @@ module.exports = Object.freeze({
     CARS_GET_MAKERS:"/cars/makers",
     //create a new listing
     LISTINGS_CREATE_LIST:"/cars/listings",
+    //create a booking
+    BOOKINGS_CREATE_BOOKING:"/booking",
+    //get booking/s
+    BOOKINGS_GET_BOOKINGS:"/bookings",
     //upload single image
     LISTINGS_IMAGE_UPLOAD_SINGLE:"/cars/listings/images/upload-single",
     //upload multiple images
