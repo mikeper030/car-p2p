@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         uid: DataTypes.STRING,
         from: DataTypes.DATE,
+        price: DataTypes.TEXT,
         to: DataTypes.DATE,
         listing_id:DataTypes.STRING,
         cancelled:DataTypes.INTEGER

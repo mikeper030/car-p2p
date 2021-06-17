@@ -89,5 +89,34 @@ module.exports={
             });
         })
     },
+    sendNewBookingEmail: function(email,dateRange,car,username){
+        return new Promise(function (resolve,reject) {
+            const template = templates.getNewBookingEmail(email,dateRange,car,username);
+            var smtpTransport = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 587,
+                auth: {
+                    user: 'p2pcarsharing21@gmail.com',
+                    pass: '72397239'
+                }
+            });
+            var mailOptions = {
+                from: 'p2pcarsharing21@gmail.com',
+                to: email,
+                subject: "Your booking is confirmed!",
+                html:template,
+                text: "Thank you!"
+            };
+            smtpTransport.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve('email sent successfully!!');
+
+                }
+            });
+        })
+
+    },
 
 }

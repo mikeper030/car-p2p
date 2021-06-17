@@ -199,7 +199,22 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
 
 
 });
+router.get(consts.LISTINGS_GET_FOR_USER,auth.authenticate_request, function(req, res, next) {
 
+    db.sequelize.query(
+        "SELECT listings.daily_price_low, models.title as model, makes.title as make, listings.createdAt, listings.images_json FROM listings " +
+        "INNER JOIN models ON listings.model_id = models.id " +
+        "INNER JOIN makes ON models.make_id = makes.id WHERE listings.user_uid = '"+req.uid+"'" , {
+            type: db.sequelize.QueryTypes.SELECT
+        }).then(listings=>{
+
+           return  res.status(200).send({code: 200, data: listings});
+
+        }).catch(function (err) {
+            console.log(err)
+        });
+
+});
 router.post(consts.LISTINGS_CREATE_LIST,auth.authenticate_request, function(req, res, next) {
 
     let data = req.body.data

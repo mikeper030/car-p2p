@@ -7,7 +7,7 @@ const util = require('../../util/util')
 var multer = require('multer');
 var auth = require('../auth/AuthMiddleware');
 const uuidAPIKey = require('uuid-apikey');
-const mailer = require("../../util/mailer");
+
 /* GET users listing. */
 var storage = multer.diskStorage(
     {
@@ -69,10 +69,8 @@ router.post(consts.USER_POST_BY_DETAILS_ENDPOINT, profilePath.single("file"), fu
 //update existing user
 router.put(consts.USER_PUT_BY_UID, profilePath.single("file"), auth.authenticate_request, function (req, res, next) {
     const user_data = JSON.parse(req.body.user)
-    const uid = user_data.uid
-    if (!uid) {
-        res.status(403).send({response: "Missing uid"})
-    } else {
+    const uid = req.uid
+
         db.User.findOne({where: {uid: uid}}).then(
             (user) => {
                 if (user) {
@@ -80,13 +78,12 @@ router.put(consts.USER_PUT_BY_UID, profilePath.single("file"), auth.authenticate
                         user_data.profile_img_url = req.file.originalname
                     }
                     user.update(user_data).then(re => {
-                        res.status(200).send({response: "User updated successfully"})
+                        res.status(200).send({code:200,status: "User updated successfully"})
                     })
                 } else {
-                    res.status(403).send({response: "User not found!"})
+                    res.status(200).send({code:403,status: "User not found!"})
                 }
             })
-    }
 })
 
 //Used for login
