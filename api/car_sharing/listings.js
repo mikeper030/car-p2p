@@ -94,7 +94,7 @@ router.get(consts.LISTING_GET, function(req, res, next) {
 
 });
 router.get(consts.LISTINGS_GET, function(req, res, next) {
-    //todo pass the desired date ranges and search logic
+    const order = req.query.order
     const where = req.query.where
     const from = req.query.from
     const to = req.query.to
@@ -106,7 +106,11 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
         //get the lat lng of user's specified location
         const offset =page*size;
         const data = {};
-
+        let orderByQ = " ORDER BY "
+        if(order){
+            orderByQ+=order
+        }
+        console.log(order!=="")
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+where+'&key=AIzaSyDDqsqjB6WrkHlUZgXBPCsHXXpZrBWfL1E')
             .then(res => res.json())
             .then(json => {
@@ -153,8 +157,8 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "" +
                      " WHERE listings.id NOT IN (SELECT listing_id FROM Bookings " +
                     "  WHERE ( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from))" +
-                    " HAVING distance < 25  " +
-                    "ORDER BY distance "+
+                    " HAVING distance < 25  "+ order!==""?orderByQ:""+
+
                     " LIMIT "+offset+","+size, {
                         type: db.sequelize.QueryTypes.SELECT
                     }).then(listings=>{
@@ -202,7 +206,7 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
 router.get(consts.LISTINGS_GET_FOR_USER,auth.authenticate_request, function(req, res, next) {
 
     db.sequelize.query(
-        "SELECT listings.daily_price_low, models.title as model, makes.title as make, listings.createdAt, listings.images_json FROM listings " +
+        "SELECT listings.daily_price_low AS price, models.title as model, makes.title as make, listings.createdAt, listings.images_json FROM listings " +
         "INNER JOIN models ON listings.model_id = models.id " +
         "INNER JOIN makes ON models.make_id = makes.id WHERE listings.user_uid = '"+req.uid+"'" , {
             type: db.sequelize.QueryTypes.SELECT
