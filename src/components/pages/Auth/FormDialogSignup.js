@@ -1,6 +1,6 @@
 import React from "react";
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
@@ -91,20 +91,28 @@ export default function FormDialogSignup(props){
 
                 axios.post(url, data)
                     .then((res) => {
-                        console.log('res', res)
-                        setChecked(false)
-                        setFormData({
-                            first_name: '',
-                            last_name: '',
-                            email: '',
-                            phone: '',
-                            password: ''
-                        })
-                        setConfirmPassword('')
-                        setLoading(false)
-                        seterrMsg('')
-                        props.changeRegisterDialog(false)
-                        props.changeLoginDialog(true)
+                        const code = res.data.code
+                        const msg = res.data.status
+                        if (code===200){
+                            toast.success(msg)
+                            console.log('res', res)
+                            setChecked(false)
+                            setFormData({
+                                first_name: '',
+                                last_name: '',
+                                email: '',
+                                phone: '',
+                                password: ''
+                            })
+                            setConfirmPassword('')
+                            setLoading(false)
+                            seterrMsg('')
+                            props.changeRegisterDialog(false)
+                            props.changeLoginDialog(true)
+                        }else {
+                            toast.error(msg)
+                        }
+
                     })
                     .catch(err => {
                         console.log(err.response)
@@ -145,7 +153,7 @@ export default function FormDialogSignup(props){
                 <div className="login-form"></div>
                 {console.log('kkk',props.registerDialog)}
                 <DialogActions className="button-stack">
-                    <h2>Welcome to Turo</h2>
+                    <h2>Welcome to GetACar</h2>
                     {errMsg == '' && openForm === false?
                         <button onClick={handleForm} className="btn-long-transparent">
                             Continue with Email

@@ -10,7 +10,7 @@ import HostCarousel from "../../Carousel/HostCarousel";
 import SupportCarousel from "../../Carousel/SupportSection";
 import Footer from "../Home/Footer";
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import React from "react";
 import Utils from "../../../Utils";
 

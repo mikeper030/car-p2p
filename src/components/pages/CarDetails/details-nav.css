@@ -13,9 +13,8 @@
 }
 
 .logo{
-    background-color: black;
-    height: 32px;
-    width: 88px;
+    height: 100px;
+    width: 100px;
     display: flex;
     justify-content: center;
 }

@@ -19,7 +19,7 @@ import { Goal } from './Goal';
 import Footer from '../Home/Footer.js'
 import Select from 'react-select'
 import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
-import axios from "axios";
+import axios from "../../../axios";
 import {API_BASE_URL} from "../../../Constants";
 import {useHistory} from 'react-router-dom'
 import {toast } from 'react-toastify';
@@ -40,7 +40,20 @@ function NewList() {
 
 export default NewList
 
-
+const years = [
+    { value: 2010, label: '2010' },
+    { value: 2011, label: '2011' },
+    { value: 2012, label: '2012' },
+    { value: 2013, label: '2013' },
+    { value: 2014, label: '2014' },
+    { value: 2015, label: '2015' },
+    { value: 2016, label: '2016' },
+    { value: 2017, label: '2017' },
+    { value: 2018, label: '2018' },
+    { value: 2019, label: '2019' },
+    { value: 2020, label: '2020' },
+    { value: 2021, label: '2021' },
+]
 const useStyles = makeStyles((theme) => ({  
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -114,6 +127,7 @@ export function SimpleAccordion(props) {
   const [carModel,setCarModel] = React.useState("")
   const [carMake,setCarMake] = React.useState("")
   const [carLocation,setCarLocation] = React.useState("")
+  const [year,setCarYear] = React.useState("")
 
   const [mobile_number,setmobile_number] = React.useState('')
   const onChange_mobile_number = e => setmobile_number(e.target.value)
@@ -165,7 +179,7 @@ export function SimpleAccordion(props) {
 
   const [priceForm,setpriceForm] = React.useState({
     lowest_price:'',
-    highest_price:''
+    highest_price:0
   })
 
   const priceFormHandler = (object) =>{
@@ -185,6 +199,7 @@ const submitForm = ()=>{
     const data = new FormData()
     const  body = {}
     body["make_id"]=carMake
+    body["year"]=year
     body["model_id"]=carModel
     body["car_location"]=carLocation
     body["mobile_number"]=mobile_number
@@ -238,6 +253,7 @@ const submitForm = ()=>{
                             const msg = resultData.data.status;
                             if (code===200){
                                 toast.success(msg)
+                                history.push("/")
                             }else {
                                 toast.error(msg)
                             }
@@ -253,6 +269,7 @@ const submitForm = ()=>{
                                 const msg = res.data.status;
                                 if (code===200){
                                     toast.success(msg)
+                                    history.push("/")
                                 }else {
                                     toast.error(msg)
                                 }
@@ -330,6 +347,8 @@ let setCarAvailabilityExpand = (previousTab,currentTab)=>{
             <p>Model</p>
             {/*<Select options={models}  />*/}
            <Select options={models} onChange={(e)=>setCarModel(e)}/>
+            <p>Year</p>
+            <Select options={years} onChange={(e)=>setCarYear(e.label)}/>
             <Typography>
               <h5>Where is your car located?</h5>
                 <GooglePlacesAutocomplete
@@ -540,7 +559,7 @@ let setCarAvailabilityExpand = (previousTab,currentTab)=>{
         >
           <Typography className={classes.heading}><h4>Payout</h4></Typography>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails style={{display:"block"}}>
           <Typography>
             <Payout 
             setPayoutExpand={setPayoutExpand}

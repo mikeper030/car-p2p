@@ -4,7 +4,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import DialogActions from "@material-ui/core/DialogActions";
 import Utils from "../../../Utils";
 import {Checkbox, FormControlLabel} from "@material-ui/core";
-import axios from "axios";
+import axios from "../../../axios";
 import {toast} from "react-toastify";
 import {API_BASE_URL} from "../../../Constants";
 

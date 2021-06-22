@@ -26,7 +26,7 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Tabs from './Tabs'
 import {useHistory, useLocation} from 'react-router-dom'
-import axios from 'axios'
+import axios from "../../../axios";
 import {API_BASE_URL} from "../../../Constants";
 import Marker from "./Marker";
 
@@ -117,7 +117,7 @@ function CarDetails() {
                                 <h4>The car</h4>
                             </td>
                             <td>
-                                <h1>{itemData.maker_name+" "+itemData.model_name}</h1>
+                                <h1>{itemData.maker_name+" "+itemData.model_name+" "+itemData.year}</h1>
                                 <p className="features-flex">5.0 <StarRateIcon /> (51 trips)</p>
                                 <div className="features-flex">
                                     {/*<table>*/}
@@ -215,7 +215,7 @@ function CarDetails() {
                                             />
                                         </Box>
                                         <p>Teresa, May 2018</p>
-                                        <p>This was our first experience with Turo and Paul made it an awesome one! We had a blast & will absolutely rent again!</p>
+                                        <p>This was our first experience with GetACar and Paul made it an awesome one! We had a blast & will absolutely rent again!</p>
                                     </div>
                                 </div>
                                 <div className="line-separator"></div>

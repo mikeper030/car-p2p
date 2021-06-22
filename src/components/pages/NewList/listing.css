@@ -27,6 +27,11 @@
    margin-right: 16px;
    padding: 0 16px;
 }
+.listing-filters:hover{
+     cursor: pointer;
+    border: 1.5px solid black;
+    color: black;
+ }
 .listing-filter-stack{
     padding: 10px;
 }

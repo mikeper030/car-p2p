@@ -20,7 +20,7 @@ function HostCarousel() {
     return (
         <>
         <div>
-          <h2>Top hosts on Turo</h2>
+          <h2>Top hosts on GetACar</h2>
           <Carousel itemsToShow={3}>
             {hosts.map((host) => (
                    <Item key={host.name}>

@@ -5,7 +5,7 @@ import SearchForm from './SearchForm'
 function Banner() {
     return (
         <div className="banner">
-            <img className="banner-img" alt="turo" src="http://resources.turo.com/f/81934/3000x800/a2b40ace75/1500-us-2x.jpg" />
+            <img className="banner-img" alt="turo" src="http://localhost:3000/uploads/images/profile/road-trip-couple.jpg" />
             <SearchForm />
         </div>
     )

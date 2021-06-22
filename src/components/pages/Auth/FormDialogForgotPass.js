@@ -1,6 +1,6 @@
 import React from "react";
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import Dialog from "@material-ui/core/Dialog";
 import CloseIcon from "@material-ui/icons/Close";
 import ClipLoader from "react-spinners/ClipLoader";

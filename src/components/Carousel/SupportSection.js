@@ -23,7 +23,7 @@ function SupportCarousel() {
             </Carousel>
             <div className="demo-text">
                 <h2>Support aspiring entrepreneurs</h2>
-                <p>Discover the Turo Seed Initiative, a program that empowers historically disenfranchised entrepreneurs with access to wealth-building opportunities, so anyone, regardless of color, gender, or creed, can start building a small business on Turo and pave their own path towards financial wellness.</p>
+                <p>Discover the GetACar Seed Initiative, a program that empowers historically disenfranchised entrepreneurs with access to wealth-building opportunities, so anyone, regardless of color, gender, or creed, can start building a small business on Turo and pave their own path towards financial wellness.</p>
                 <div className="demo-links">
                     <button>Support a Seed Host</button>
                     <a href="/">Learn More</a>

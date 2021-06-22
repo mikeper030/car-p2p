@@ -16,7 +16,7 @@ function PictureCard() {
     return (
             <>
             <div>
-              <h2>Browse by make</h2>
+              {/*<h2>Browse by make</h2>*/}
               <Carousel itemsToShow={5}>
                 {cars.map((car) => (
                        <Item key={car.name}>

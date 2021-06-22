@@ -22,21 +22,21 @@ function Payout(props) {
     return (
         <div>
             <h3></h3>
-            <span>Use our smart price match algorithm to set an optimal price</span>
+            {/*<span>Use our smart price match algorithm to set an optimal price</span>*/}
             <div className="payout-div">
                 <h4>Price</h4>
-                <p style={{textAlign:"left"}}>Lowest price</p>
+                <p style={{textAlign:"left"}}>Enter your daily price</p>
                 <input type="text" 
                 name="lowest_price"
                 value={lowest}
                 onChange={handleLowest}
                 placeHolder="Enter low price bid"/>
-                <p style={{textAlign:"left"}}>Highest price</p>
-                <input type="text" 
-                name="highest_price"
-                value={highest}
-                onChange={handleHighest}
-                placeHolder="Enter peek price bid"/>
+                {/*<p style={{textAlign:"left"}}>Highest price</p>*/}
+                {/*<input type="text" */}
+                {/*name="highest_price"*/}
+                {/*value={highest}*/}
+                {/*onChange={handleHighest}*/}
+                {/*placeHolder="Enter peek price bid"/>*/}
             </div>
             <div>
             <button

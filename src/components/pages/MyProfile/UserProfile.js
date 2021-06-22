@@ -7,7 +7,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Rating from '@material-ui/lab/Rating';
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import Avatar from "@material-ui/core/Avatar";
 import {toast} from "react-toastify";
 

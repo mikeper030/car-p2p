@@ -73,7 +73,7 @@ const finGoals = [
     return (
       <form className={classes.root} noValidate autoComplete="off">
         <div className="form-flex-col">
-          <span>What is your primary financial goal for sharing this car on Turo?</span>
+          <span>What is your primary financial goal for sharing this car on GetACar?</span>
           <TextField
             id="filled-select-currency"
             select

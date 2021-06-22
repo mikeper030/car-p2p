@@ -4,7 +4,7 @@ import Nav from '../Home/Nav'
 import Footer from '../Home/Footer'
 import { Card } from '@material-ui/core'
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import {toast} from "react-toastify";
 
 const carInfo = []

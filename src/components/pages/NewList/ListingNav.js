@@ -4,7 +4,7 @@ import './listing.css'
 import FormDialogLogin from "../Auth/FormDialogLogin"
 import FormDialogSignup from "../Auth/FormDialogSignup"
 import FormDialogForgotPass from "../Auth/FormDialogForgotPass";
-import axios from "axios"
+import axios from "../../../axios";
 import Avatar from '@material-ui/core/Avatar';
 import {API_BASE_URL} from "../../../Constants";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
@@ -166,7 +166,7 @@ React.useEffect(()=>{
         <header className="nav">
             
             <div className="nav-left-link">
-                <div className="logo"><a href="/">TURO</a></div>
+                <div className="logo"><a href="/">GetACar</a></div>
                 <div className="listing-search">
                     <div>Where</div>
                     <GooglePlacesAutocomplete
@@ -208,7 +208,7 @@ React.useEffect(()=>{
                     </div>
                     {localStorage.getItem("access") == null ? 
                     <div className="nav-right-links">
-                        <a href="/new-list">List your car</a>
+                        <a className="custom_a" href="/new-list">List your car</a>
                     <FormDialogLogin 
                      handleOpenLogin={props.handleOpenLogin}
                     setLoggedIn={setLoggedIn}

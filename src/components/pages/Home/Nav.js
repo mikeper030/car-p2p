@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import FormDialogLogin from "../Auth/FormDialogLogin";
 import FormDialogSignup from "../Auth/FormDialogSignup";
-import axios from "axios"
+import axios from "../../../axios";
 import CloseIcon from '@material-ui/icons/Close';
 import Avatar from '@material-ui/core/Avatar';
 import FormDialogForgotPass from "../Auth/FormDialogForgotPass";
@@ -119,7 +119,7 @@ const LogoutHandler = () =>{
 return (
   <header className="nav">
     <div className="nav-left-link">
-        <div className="logo"><a href="/">TURO</a></div>
+      <a href="/"> <div className="logo"><img src="https://firebasestorage.googleapis.com/v0/b/abpm-c7186.appspot.com/o/logo.png?alt=media&token=c9cf27ed-d9b6-4945-a33f-7c4507131534"/></div></a>
     </div>
  
    { isLoggedIn && profileData?

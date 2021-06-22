@@ -11,7 +11,7 @@ function Footer() {
                     <li>Policies</li>
                     <li>Press</li>
                     <li>Open Road</li>
-                    <li>Turo shop</li>
+                    <li>GetACar shop</li>
                 </ul>
                 <ul>
                     <li><h6>Locations</h6></li>
@@ -26,7 +26,7 @@ function Footer() {
                     <li>Policies</li>
                     <li>Press</li>
                     <li>Open Road</li>
-                    <li>Turo shop</li>
+                    <li>GetACar shop</li>
                 </ul>
                 <ul>
                     <li><h6>Hosting</h6></li>
@@ -34,7 +34,7 @@ function Footer() {
                     <li>Policies</li>
                     <li>Press</li>
                     <li>Open Road</li>
-                    <li>Turo shop</li>
+                    <li>GetACar shop</li>
                 </ul>
             </div>
 

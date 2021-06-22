@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import Slider from '@material-ui/core/Slider';
 import '../NewList/listing.css';
-import axios from "axios"
+import axios from "../../../axios";
 import {Link,useLocation, useHistory} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
 import {API_BASE_URL} from "../../../Constants";
@@ -44,7 +44,7 @@ export default function CarList({uriParams}) {
   //Function to handle and change pages on selection
   console.log(uriParams)
   useEffect(()=>{
-    getCarsList()
+    getCarsList("best match")
 
   },[counter,cardsPerPage,uriParams])
 
@@ -55,10 +55,7 @@ export default function CarList({uriParams}) {
     setCounter(selected)
    
   };
-  
-  useEffect(() => {
-        getCarsList() 
-  },[]);
+
 
 
 
@@ -106,7 +103,9 @@ const history = useHistory();
     })
   }
 
-  
+  const filterBm = () => {
+    getCarsList("best match")
+  }
   const filterPrice = () => {
       getCarsList("daily_price_low")
   }
@@ -129,7 +128,7 @@ const history = useHistory();
     <>
       <header className="nav">
       <div className="listing-filter-stack">
-          <button className="listing-filters">Best match</button>
+          <button className="listing-filters" onClick={() => filterBm()}>Best match</button>
           <div className="price-btn">
             <button className="listing-filters" onClick={() => filterPrice()}>Price</button>
           </div>
@@ -185,7 +184,10 @@ const history = useHistory();
                       />
                       <CardContent>
                         <Typography gutterBottom variant="h5" component="h2" underline >
-                          {car.maker_name ? car.maker_name+", "+car.model_name : 'No Name'}
+                          { car.maker_name?car.maker_name+", "+car.model_name: 'No Name'}
+                        </Typography>
+                        <Typography gutterBottom variant="h5" component="h2" underline >
+                          { car.year?car.year: ''}
                         </Typography>
                         <Typography className="car-rating" variant="body2" color="textSecondary" component="p" style={{ textDecoration: 'none'}}>
                           {car.feedback_score ? car.feedback_score : 'No rating'}<StarRateIcon /> ({car.trips ? car.trips : 'No trips'} trips)
@@ -195,7 +197,7 @@ const history = useHistory();
                         </Typography>
                       </CardContent>
                       <CardActions>
-                        <h4 >${car.price ? car.price : 'No Price'}/day</h4>
+                        <h2 >${car.price ? car.price : 'No Price'}/day</h2>
                       </CardActions>
                     </CardActionArea>
                   </Card>

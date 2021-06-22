@@ -1,11 +1,12 @@
 import React from "react";
 import {API_BASE_URL} from "../../../Constants";
-import axios from "axios";
+import axios from "../../../axios";
 import Dialog from "@material-ui/core/Dialog";
 import CloseIcon from "@material-ui/icons/Close";
 import ClipLoader from "react-spinners/ClipLoader";
 import DialogActions from "@material-ui/core/DialogActions";
 import Utils from "../../../Utils";
+import {toast} from "react-toastify";
 
 export default function FormDialogLogin(props) {
 
@@ -100,6 +101,7 @@ export default function FormDialogLogin(props) {
                     setOpen(false)
                     setLoading(false)
                     props.changeLoginDialog(false)
+                    toast.success("Login success!")
                 }else{
                     setCredentialsError(true)
                     props.changeLoginDialog(true)

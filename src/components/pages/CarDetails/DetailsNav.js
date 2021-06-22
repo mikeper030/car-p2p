@@ -6,7 +6,7 @@ function DetailsNav() {
         <header className="scroll-nav">
             <div className="nav-left-link">
                     <div className="logo">
-                        <a href="/">TURO</a>
+                        <a href="/">GetACar</a>
                     </div>
                     <div className="scroll-left-links">
                         <a href="#overview">OVERVIEW</a>
