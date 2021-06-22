@@ -46,7 +46,7 @@ router.get(consts.LISTING_GET, function(req, res, next) {
             // "        ) " +
             // "   ) AS distance,  " +
             "models.title as model_name, makes.title as maker_name, features_json," +
-            "mobile_phone, 2 as feedback_score, profile_img_url, description,first_name, last_name, notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
+            "mobile_phone, 2 as feedback_score, profile_img_url,year, description,first_name, last_name, notification_advance,min_trip_days, max_trip_days, daily_price_low as price, listings.updatedAt " +
             " FROM" +
             " listings INNER JOIN models ON listings.model_id = models.id " +
             "          INNER JOIN makes ON models.make_id = makes.id AND models.id = listings.model_id " +
@@ -93,6 +93,26 @@ router.get(consts.LISTING_GET, function(req, res, next) {
 
 
 });
+
+function applyAlgorithm(listings,maxPrice) {
+    //get the max value of the prices
+    for (let i=0;i<listings.length;i++){
+         const feedbackGrade = (Number(listings[i].feedback_score)/5)*10
+         const price = Number(listings[i]["daily_price_low"])
+         const priceGrade = (((maxPrice-price)/maxPrice)*30)
+         const distance = Number(listings[i].distance.split(" ")[0])
+         const distanceGrade = (((25-distance)/25)*30)
+         const yearGrade = ((12 - ((2021-listings[i].year)) /12)*20)
+         const imageGrade = listings[i].images_json !=="{}"?10:0
+         const total = feedbackGrade +distanceGrade+yearGrade+imageGrade+priceGrade
+         listings[i]["overall_grade"] = total
+     }
+    listings.sort(function(a, b) {
+        return parseFloat(a["overall_grade"]) - parseFloat(b["overall_grade"]);
+    });
+
+}
+
 router.get(consts.LISTINGS_GET, function(req, res, next) {
     const order = req.query.order
     const where = req.query.where
@@ -106,9 +126,11 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
         //get the lat lng of user's specified location
         const offset =page*size;
         const data = {};
-        let orderByQ = " ORDER BY "
-        if(order){
+        let orderByQ = ""
+        if(order && order !=="best match"){
+            orderByQ=" ORDER BY "
             orderByQ+=order
+            orderByQ+= " ASC"
         }
         console.log(order!=="")
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+where+'&key=AIzaSyDDqsqjB6WrkHlUZgXBPCsHXXpZrBWfL1E')
@@ -129,14 +151,15 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "            * sin( radians( listings.lat ) ) " +
                     "        ) " +
                     "   ) < 25  AND listings.id NOT IN " +
-                    "   (SELECT listing_id FROM Bookings WHERE ( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from)) ) as count, " +
+                    "   (SELECT listing_id FROM Bookings WHERE " +
+                    "( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from)) ) as count, " +
                       "CASE WHEN" +
                     " listings.images_json != '' AND listings.images_json != '{}' THEN listings.images_json" +
                     " ELSE models.images_json END as images_json, " +
                     "listings.id as listing_id, " +
                     "model_id, user_uid, lat, lng , " +
                     "(" +
-                    "        6371 " +
+                    "        6371 " + //radius of the earth in km
                     "        * acos(" +
                     "            cos( radians("+lat+") ) " +
                     "            * cos( radians( listings.lat ) ) " +
@@ -146,7 +169,7 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "        ) " +
                     "   ) AS distance" +
                     ",  " +
-                    "models.title as model_name, makes.title as maker_name, features_json," +
+                    "models.title as model_name, year, makes.title as maker_name, features_json," +
                     "mobile_phone, 2 as feedback_score, description,notification_advance,min_trip_days, " +
                     "max_trip_days, daily_price_low as price, listings.updatedAt " +
                     " FROM" +
@@ -157,7 +180,7 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                     "" +
                      " WHERE listings.id NOT IN (SELECT listing_id FROM Bookings " +
                     "  WHERE ( CAST( '"+from+"' AS DATETIME) <= Bookings.to AND CAST( '"+to+"' AS DATETIME) >= Bookings.from))" +
-                    " HAVING distance < 25  "+ order!==""?orderByQ:""+
+                    " HAVING distance < 25  "+ orderByQ+
 
                     " LIMIT "+offset+","+size, {
                         type: db.sequelize.QueryTypes.SELECT
@@ -167,9 +190,10 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                         data.count = listings[0].count;
                     }else
                         data.count = 0;
+                    const priceArr = []
                     for(let a=0;a<listings.length;a++){
                         delete listings[a]['count'];
-
+                        priceArr.push(listings[a].daily_price_low)
                         if (listings[a]["images_json"]&&listings[a]["images_json"]!==""){
                             console.log(listings[a]["images_json"])
                             listings[a]["thumbnail"]="http://185.241.5.135:3000/uploads/images/cars/"+JSON.parse(listings[a]["images_json"]).img1
@@ -190,6 +214,10 @@ router.get(consts.LISTINGS_GET, function(req, res, next) {
                         let totalPrice = pricePerHour * hour_diff
                         listings[a]["total_price"]=totalPrice.toFixed(2)
 
+                    }
+                    if (order ==='best match'){
+                        //apply the algorithm
+                       applyAlgorithm(listings,Math.max(...priceArr))
                     }
                     data.items = listings;
                     res.status(200).send({status: 200, data: data});
@@ -223,7 +251,16 @@ router.post(consts.LISTINGS_CREATE_LIST,auth.authenticate_request, function(req,
 
     let data = req.body.data
     const uid = req.uid
-    if (!data.model_id.id || !uid ||!data.car_location  || !data.price_form) {
+    if(!data.price_form.lowest_price){
+        return res.status(200).send({code: 403, status: "missing price field!"})
+    }
+    if(!data.year){
+        return res.status(200).send({code: 403, status: "missing model year!"})
+    }
+    if(!data.mobile_number){
+        return res.status(200).send({code: 403, status: "missing mobile phone!"})
+    }
+    if (!data.model_id.id || !uid ||!data.car_location  ) {
         res.status(200).send({code: 403, status: "missing request params"})
     }else {
         const location = data.car_location.label
@@ -239,6 +276,7 @@ router.post(consts.LISTINGS_CREATE_LIST,auth.authenticate_request, function(req,
                     user_uid: uid,
                     lat:lat,
                     lng:lng,
+                    year:data.year,
                     mobile_phone:data.mobile_number,
                     features_json:JSON.stringify(data.car_description.car_features),
                     description:data.car_description.car_desc,
@@ -246,7 +284,7 @@ router.post(consts.LISTINGS_CREATE_LIST,auth.authenticate_request, function(req,
                     min_trip_days:data.car_availability.min_trip_days,
                     advance_notice:data.car_availability.advance_notice,
                     daily_price_low: data.price_form.lowest_price,
-                    daily_price_high: data.price_form.highest_price,
+                    daily_price_high: 0,
                 }).then(r=>{
                     res.status(200).send({code: 200,id:r.id ,status: "Your listing was created successfully!"})
                 })
@@ -307,4 +345,5 @@ router.post(consts.LISTINGS_IMAGE_UPLOAD_MULTIPLE,[auth.authenticate_request,car
 
 
 });
+
 module.exports = router;

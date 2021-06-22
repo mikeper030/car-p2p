@@ -7,7 +7,7 @@ const util = require('../../util/util')
 var multer = require('multer');
 var auth = require('../auth/AuthMiddleware');
 const uuidAPIKey = require('uuid-apikey');
-
+const mailer = require('../../util/mailer')
 /* GET users listing. */
 var storage = multer.diskStorage(
     {
@@ -56,8 +56,7 @@ router.post(consts.USER_POST_BY_DETAILS_ENDPOINT, profilePath.single("file"), fu
                     }
                     user_data.activation_token = token
                     db.User.create(user_data).then((user) => {
-                        res.status(200).send({response: "User created successfully!"})
-
+                        res.status(200).send({code:200,status: "User created successfully!"})
                         mailer.sendAccountActivationEmail(user.email,user.username,`${consts.WEBSITE_URL}/account?action=verify-email&token=`+token)
                     })
                 }
@@ -199,7 +198,7 @@ router.get(consts.USER_REFRESH_TOKEN, async function (req, res, next) {
             }, {
                 where: {uid: user.uid}
             }).then(()=>{
-                return res.status(200).send({code: 200, token: cred.apiKey, response: "ok"})
+                return res.status(200).send({code: 200, token: cred.apiKey,expires:exp.getTime(), response: "ok"})
             })
         })
     } else {

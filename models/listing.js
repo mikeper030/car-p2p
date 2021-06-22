@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true
         },
         model_id: DataTypes.INTEGER,
+        year: DataTypes.INTEGER,
         user_uid: DataTypes.TEXT,
         lat: DataTypes.TEXT,
         lng: DataTypes.TEXT,
